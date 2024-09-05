@@ -11,6 +11,7 @@
   "description": "Its an assignment project given from Across The Global Comapny (ATG).",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
