@@ -21,7 +21,7 @@ app.get('/', (req, resp) => {
     resp.send('Hello World')
 })
 
-app.post('/webhook', (req, res) => {
+app.post('/webhook', async (req, res) => {
     const incomingMsg = req.body.Body;
     const senderNumber = req.body.From;
     console.log("From: "+senderNumber)
@@ -31,14 +31,12 @@ app.post('/webhook', (req, res) => {
         console.log(`Received message: "${incomingMsg}" from ${senderNumber}`);
         const responseMsg = `You said: ${incomingMsg}`;
 
-        client.messages
-            .create({
-                body: responseMsg,
-                from: 'whatsapp:+14155238886', // Your Twilio WhatsApp number
-                to: 'whatsapp:+917017308602'
-            })
-            .then(message => console.log(`Message sent with SID: ${message.sid}`))
-            .catch(err => console.error('Error sending message:', err));
+        const message = await client.messages.create({
+            body: responseMsg,
+            from: 'whatsapp:+14155238886', // Your Twilio WhatsApp number
+            to: `whatsapp:+917017308602`  // User's WhatsApp number
+        });
+        console.log(message)
 
         return res.status(200).send({
             success: true,
