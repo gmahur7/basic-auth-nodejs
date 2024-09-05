@@ -24,8 +24,8 @@ app.get('/', (req, resp) => {
 app.post('/webhook', (req, res) => {
     const incomingMsg = req.body.Body;
     const senderNumber = req.body.From;
-    console.log("From: "+From)
-    console.log("Body: "+Body)
+    console.log("From: "+senderNumber)
+    console.log("Body: "+incomingMsg)
     try {
 
         console.log(`Received message: "${incomingMsg}" from ${senderNumber}`);
