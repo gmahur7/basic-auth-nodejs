@@ -31,7 +31,7 @@ app.post('/webhook', (req, res) => {
       .create({
         body: responseMsg,
         from: 'whatsapp:+14155238886', // Your Twilio WhatsApp number
-        to: senderNumber
+        to: 'whatsapp:+917017308602'
       })
       .then(message => console.log(`Message sent with SID: ${message.sid}`))
       .catch(err => console.error('Error sending message:', err));
