@@ -5,6 +5,10 @@ const mongoDBConnect = require('./Database/dbConnect')
 const app = express()
 mongoDBConnect()
 const userRoutes = require('./Routes/UserRoutes')
+const twilio = require('twilio');
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = twilio(accountSid, authToken);
 
 const cors = require('cors')
 
