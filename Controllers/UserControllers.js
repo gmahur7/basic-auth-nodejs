@@ -14,7 +14,7 @@ const client = twilio(accountSid, authToken);
 const registerUser = asyncHandler(async (req, resp) => {
     const { username, email, password,phoneNumber } = req.body
     if (!username || !email || !password) {
-        resp.sendStatus(400).json({
+        resp.status(400).json({
             success: false,
             message: "All fields are required"
         })
@@ -23,7 +23,7 @@ const registerUser = asyncHandler(async (req, resp) => {
 
     const userExits = await User.findOne({ email })
     if (userExits) {
-        resp.send(400).json({
+        resp.status(400).json({
             success: false,
             message: "Email Already Exists"
         })
@@ -38,7 +38,7 @@ const registerUser = asyncHandler(async (req, resp) => {
 
         let opt=123909
         const message = await client.messages.create({
-            body: `Your verification code is: ${otp}`,
+            body: `Your verification code is: 123909`,
             from: 'whatsapp:+14155238886', // Your Twilio WhatsApp number
             to: `whatsapp:+91${phoneNumber}`  // User's WhatsApp number
         });
