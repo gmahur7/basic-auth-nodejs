@@ -22,9 +22,10 @@ app.get('/', (req, resp) => {
 })
 
 app.post('/webhook', (req, res) => {
-    console.log(req.body)
     const incomingMsg = req.body.Body;
     const senderNumber = req.body.From;
+    console.log("From: "+From)
+    console.log("Body: "+Body)
     try {
 
         console.log(`Received message: "${incomingMsg}" from ${senderNumber}`);
@@ -44,6 +45,7 @@ app.post('/webhook', (req, res) => {
             message: "Message send"
         })
     } catch (error) {
+        console.log(error)
         return res.status(500).send({
             success: false,
             message: error
