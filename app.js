@@ -6,6 +6,8 @@ const app = express()
 mongoDBConnect()
 const userRoutes = require('./Routes/UserRoutes')
 const twilio = require('twilio');
+const {twilioWebhook} = require('twilio');
+const MessagingResponse = require('twilio').twiml.MessagingResponse
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = twilio(accountSid, authToken);
@@ -24,35 +26,46 @@ app.get('/', (req, resp) => {
 app.post('/webhook', async (req, res) => {
     const incomingMsg = req.body.Body;
     const senderNumber = req.body.From;
-    console.log("From: " + senderNumber)
-    console.log("Body: " + incomingMsg)
-    try {
+    console.log("From: " + senderNumber);
+    console.log("Body: " + incomingMsg);
 
+    // Create a new TwiML MessagingResponse object
+    const twiml = new MessagingResponse();
+    
+    try {
         console.log(`Received message: "${incomingMsg}" from ${senderNumber}`);
 
-        if (incomingMsg) {
-            const responseMsg = `You said: ${incomingMsg}`;
-            const message = await client.messages.create({
-                body: responseMsg,
-                from: 'whatsapp:+14155238886', // Your Twilio WhatsApp number
-                to: `whatsapp:+917017308602`  // User's WhatsApp number
-            });
-            console.log(message)
+        let responseMsg;
+
+        // Custom response logic based on incoming message
+        if (incomingMsg.toLowerCase().includes('hello')) {
+            responseMsg = 'Hello! How can I assist you today?';
+        } else if (incomingMsg.toLowerCase().includes('help')) {
+            responseMsg = 'Here are some options:\n1. Ask about our services.\n2. Get customer support.';
+        } else {
+            responseMsg = `You said: ${incomingMsg}`;
         }
 
+        // Add the message to the TwiML response
+        twiml.message(responseMsg);
+        
+        // Set response header to 'text/xml' for TwiML
+        res.writeHead(200, { 'Content-Type': 'text/xml' });
 
-        return res.status(200).send({
-            success: true,
-            message: "Message send"
-        })
+        // Send the TwiML response
+        res.end(twiml.toString());
+
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return res.status(500).send({
             success: false,
-            message: error
-        })
+            message: 'Failed to process the message',
+            error: error.message
+        });
     }
 });
+
+
 
 //---------------------------USER ROUTES------------------------------------------------
 app.use("/api/user", userRoutes)
