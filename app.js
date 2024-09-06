@@ -6,7 +6,7 @@ const app = express()
 mongoDBConnect()
 const userRoutes = require('./Routes/UserRoutes')
 const twilio = require('twilio');
-const {twilioWebhook} = require('twilio');
+const { twilioWebhook } = require('twilio');
 const MessagingResponse = require('twilio').twiml.MessagingResponse
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -29,9 +29,16 @@ app.post('/webhook', async (req, res) => {
     console.log("From: " + senderNumber);
     console.log("Body: " + incomingMsg);
 
+    if (incomingMsg === undefined || !incomingMsg) {
+        return res.status(404).send({
+            success:false,
+            error:"Body is undefined"
+        })
+    }
+
     // Create a new TwiML MessagingResponse object
     const twiml = new MessagingResponse();
-    
+
     try {
         console.log(`Received message: "${incomingMsg}" from ${senderNumber}`);
 
@@ -48,7 +55,7 @@ app.post('/webhook', async (req, res) => {
 
         // Add the message to the TwiML response
         twiml.message(responseMsg);
-        
+
         // Set response header to 'text/xml' for TwiML
         res.writeHead(200, { 'Content-Type': 'text/xml' });
 
